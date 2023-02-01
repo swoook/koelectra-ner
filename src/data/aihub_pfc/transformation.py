@@ -20,6 +20,12 @@ def create_word_label_sequence(example):
     words = list()
     labels = list()
     
+    if not example['NE']:
+        subsequence = create_subsequence(example['text'], '-')
+        words.extend(subsequence[0])
+        labels.extend(subsequence[1])
+        return words, labels
+    
     entities_sorted = sorted(example['NE'], key=lambda item: item['begin'])
     
     if entities_sorted[0]['begin'] > 0:
