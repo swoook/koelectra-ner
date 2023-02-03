@@ -9,6 +9,7 @@ class Example:
         self._begin = '_B'
         self._consecutive = '_I'
         self.seq_len_threshold = 4
+        self._marks = ['.', '!', '?']
         
     def _create_positive_subsequence(self, substring, label):
         words = substring.split()
@@ -28,6 +29,12 @@ class Example:
     def _create_subsequence(self, substring, label):
         subsequence = self._create_negative_subsequence(substring, label) if label == self._negative else self._create_positive_subsequence(substring, label)
         self._extend_subsequence(subsequence)
+        
+    def _separate_end_mark(self):
+        word = self._word_sequence.pop()
+        self._word_sequence.append(word[:-1])
+        self._word_sequence.append(word[-1])
+        self._label_sequence.append(self._negative)
     
     def create_sequence(self, example):
         if not example['NE']:
@@ -65,4 +72,8 @@ class Example:
         
         if not len(self._label_sequence) >= self.seq_len_threshold:
             return None
+        
+        if (self._label_sequence[-1] == self._negative) and (self._word_sequence[-1][-1] in self._marks): 
+            self._separate_end_mark()
+        
         return self._word_sequence, self._label_sequence
