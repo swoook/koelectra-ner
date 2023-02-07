@@ -79,4 +79,4 @@ class Example:
         if (self._label_sequence[-1] == self._negative) and (self._word_sequence[-1][-1] in self._marks): 
             self._separate_end_mark()
         
-        return self._word_sequence, self._label_sequence
+        return ' '.join(self._word_sequence), ' '.join(self._label_sequence)
