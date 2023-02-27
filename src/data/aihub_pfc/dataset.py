@@ -24,9 +24,13 @@ class Dataset:
             self.__source_data = json.load(open(source_path, 'r'))['data']
         
         for _, source_example in enumerate(self.__source_data):
-            sequences = self.__example.convert(source_example)
-            if sequences is None: continue
-            self.__result.append(sequences)
+            if 'sentence' in source_example: examples = source_example['sentence']
+            elif 'rows' in source_example: examples = source_example['rows']
+            else: examples = [source_example]
+            for example in examples:
+                sequences = self.__example.convert(example)
+                if sequences is None: continue
+                self.__result.append(sequences)
             
         if dst_path is None: dst_path = './results.tsv'
             
