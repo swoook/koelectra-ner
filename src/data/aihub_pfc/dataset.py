@@ -1,6 +1,8 @@
 import json
 import csv
 
+from tqdm.contrib.concurrent import process_map
+
 from example import Example
 
 
@@ -37,3 +39,38 @@ class Dataset:
         with open(dst_path, 'w', newline='') as f:
             writer = csv.writer(f, delimiter='\t')
             writer.writerows(self.__result)
+            
+
+def parse_args():
+    arg_parser = argparse.ArgumentParser()
+
+    arg_parser.add_argument("--src_directory", type=str, required=True)
+    arg_parser.add_argument("--dst_directory", type=str, required=True)
+    arg_parser.add_argument("--num_cpus", type=int, required=True)
+
+    args = arg_parser.parse_args()
+    
+    return args
+    
+    
+def main(args):
+    entries = os.listdir(args.src_directory)
+    entries = [entry for entry in entries if os.path.splitext(entry)[1] == '.json']
+
+    def process_map_fn(entry):
+        src_path = os.path.join(src_directory, entry)
+        src_name = os.path.splitext(entry)[0]
+        dataset = Dataset(os.path.join(src_directory, entry))
+        dataset.convert(dst_path=os.path.join(
+            args.dst_directory, 
+            ''.join([src_name, '.tsv'])
+        ))
+
+    process_map(process_map_fn, entries, max_workers=args.num_cpus)
+    
+    
+if __name__ == '__main__':
+    args = parse_args()
+    main(args)
+    
+    
