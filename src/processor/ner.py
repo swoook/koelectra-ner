@@ -146,18 +146,14 @@ def ner_convert_examples_to_features(
     return features
 
 
-class NaverNerProcessor(object):
-    """Processor for the Naver NER data set """
+class NerProcessor(object):
+    """Processor for NER data set """
 
     def __init__(self, args):
         self.args = args
 
     def get_labels(self):
-        return ["O",
-                "PER-B", "PER-I", "FLD-B", "FLD-I", "AFW-B", "AFW-I", "ORG-B", "ORG-I",
-                "LOC-B", "LOC-I", "CVL-B", "CVL-I", "DAT-B", "DAT-I", "TIM-B", "TIM-I",
-                "NUM-B", "NUM-I", "EVT-B", "EVT-I", "ANM-B", "ANM-I", "PLT-B", "PLT-I",
-                "MAT-B", "MAT-I", "TRM-B", "TRM-I"]
+        raise NotImplementedError
 
     @classmethod
     def _read_file(cls, input_file):
@@ -204,8 +200,50 @@ class NaverNerProcessor(object):
                                                                   self.args.task,
                                                                   file_to_read)), mode)
 
+
+class NaverNerProcessor(NerProcessor):
+    """Processor for the Naver NER data set """
+
+    def __init__(self, args):
+        super().__init__(args)
+
+    def get_labels(self):
+        return ["O",
+                "PER-B", "PER-I", "FLD-B", "FLD-I", "AFW-B", "AFW-I", "ORG-B", "ORG-I",
+                "LOC-B", "LOC-I", "CVL-B", "CVL-I", "DAT-B", "DAT-I", "TIM-B", "TIM-I",
+                "NUM-B", "NUM-I", "EVT-B", "EVT-I", "ANM-B", "ANM-I", "PLT-B", "PLT-I",
+                "MAT-B", "MAT-I", "TRM-B", "TRM-I"]
+
+
+class ModuNerProcessor(NerProcessor):
+    """Processor for the MODU NER data set """
+
+    def __init__(self, args):
+        super().__init__(args)
+
+    def get_labels(self):
+        return ["O",
+                "PS-B", "PS-I", 
+                "FD-B", "FD-I", 
+                "TR-B", "TR-I", 
+                "AF-B", "AF-I",
+                "OG-B", "OG-I", 
+                "LC-B", "LC-I", 
+                "CV-B", "CV-I", 
+                "DT-B", "DT-I",
+                "TI-B", "TI-I", 
+                "QT-B", "QT-I", 
+                "EV-B", "EV-I", 
+                "AM-B", "AM-I",
+                "PT-B", "PT-I", 
+                "MT-B", "MT-I",
+                "TM-B", "TM-I",
+                ]
+    
+
 ner_processors = {
-    "naver-ner": NaverNerProcessor
+    "naver-ner": NaverNerProcessor,
+    "modu-ner": NaverNerProcessor,
 }
 
 ner_tasks_num_labels = {
