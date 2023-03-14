@@ -243,11 +243,12 @@ class ModuNerProcessor(NerProcessor):
 
 ner_processors = {
     "naver-ner": NaverNerProcessor,
-    "modu-ner": NaverNerProcessor,
+    "modu-ner": ModuNerProcessor,
 }
 
 ner_tasks_num_labels = {
-    "naver-ner": 29
+    "naver-ner": 29,
+    "naver-ner": 31,
 }
 
 
